@@ -1,0 +1,66 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} 
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #34495e;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    padding: 10px;
+}
+
+nav a:hover {
+    background-color: #2c3e50;
+    border-radius: 5px;
+}
+
+.container {
+    margin: 20px auto;
+    width: 1000px; /* กำหนดความกว้างเป็น 800px */
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: auto;
+    margin-top: auto; /* ดัน footer ลงมาล่างสุด */
+}
+
+.user-info a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+.user-info a:hover {
+    color: rgb(255, 0, 0);
+    text-decoration: underline;
+}

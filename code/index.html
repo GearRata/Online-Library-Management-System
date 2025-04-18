@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบห้องสมุดออนไลน์</title>
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px;
+        }
+
+        header img {
+            margin-right: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .user-info {
+            margin-left: auto;
+        }
+
+        h3 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            max-height: 200px; /* กำหนดความสูงสูงสุดของตาราง */
+            overflow-y: auto; /* เพิ่มสกอล์ถ้ามีเนื้อหามากเกินไป */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 4px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 30%;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 20%;
+        }
+
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 20%;
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 15%;
+        }
+
+        tr {
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="gpn.png" alt="GPN Logo" style="width:100px;">
+        <h1>ระบบห้องสมุดออนไลน์</h1>
+        <div class="user-info" id="user-info">
+            <a href='login.php'>เข้าสู่ระบบ</a>
+        </div>
+    </header>
+
+    <nav id="nav">
+        <a href="index.html">หน้าแรก</a>
+        <a href="search.php">ค้นหาหนังสือ</a>
+        <a href="user-account.php">บัญชีผู้ใช้</a>
+    </nav>
+
+    <script>
+        fetch('get-user.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.username) {
+                    document.getElementById('nav').innerHTML += 
+                        '<a href="logout.php">ออกจากระบบ</a>';
+                } else {
+                    document.getElementById('nav').innerHTML += 
+                        '<a href="login.php">เข้าสู่ระบบ</a>';
+                }
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    </script>
+
+    <div class="banner" style="text-align: center; padding: 20px; background-color: lightblue;">
+        <h2>ห้องสมุดออนไลน์ที่สมบูรณ์แบบ</h2>
+        <p>ค้นหาหนังสือมากมายจากทั่วโลกเพียงปลายนิ้ว</p>
+    </div>
+
+    <h3>รายการหนังสือ</h3>
+    <div class="table-container">
+        <table id="book-table">
+            <tr>
+                <th>ชื่อหนังสือ</th>
+                <th>ผู้เขียน</th>
+                <th>หมวดหมู่</th>
+                <th>จำนวน</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        fetch('get-books.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const bookTable = document.getElementById('book-table');
+
+                if (data.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = '<td colspan="4">ไม่มีข้อมูลหนังสือ</td>';
+                    bookTable.appendChild(row);
+                    return;
+                }
+
+                data.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><a href="book-detail.php?id=${book.id}">${book.title}</a></td>
+                        <td>${book.author}</td>
+                        <td>${book.category}</td>
+                        <td>${book.quantity}</td>
+                    `;
+                    bookTable.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching book data:', error);
+                const bookTable = document.getElementById('book-table');
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4">เกิดข้อผิดพลาด: ${error.message}</td>`;
+                bookTable.appendChild(row);
+            });
+    </script>
+
+    <footer>
+        <p>ห้องสมุดออนไลน์ &copy; 2024</p>
+    </footer>
+
+    <script>
+        fetch('get-user.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.username) {
+                    document.getElementById('user-info').innerHTML =
+                        'สวัสดี, ' + data.username + ' | <a href="logout.php">ออกจากระบบ</a>';
+                }
+            });
+    </script>
+
+</body>
+
+</html>
